@@ -1,0 +1,18 @@
+[
+  {
+    "name": "John",
+    "email": "john@doe.com",
+    "contact": 987987973
+  },
+  {
+    "name": "Jane",
+    "email": "jane@doe.com",
+    "contact": 98723472232
+  },
+]
+
+// show dbs
+// use students
+
+// db.studentData.insertOne(obj)
+// db.studentData.find()
