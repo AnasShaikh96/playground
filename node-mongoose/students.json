@@ -16,3 +16,8 @@
 
 // db.studentData.insertOne(obj)
 // db.studentData.find()
+// db.studentData.findOne()
+// db.studentData.updateOne()
+// db.studentData.updateMany()
+// db.studentData.deleteOne()
+// db.studentData.deleteMany()
