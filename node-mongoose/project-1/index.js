@@ -22,5 +22,33 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 
-const sam = new User({ name: "Sam", email: 'sam@234.com', password: 'pass@123' })
-await sam.save()
+app.get('/create', async (req, res) => {
+
+  const { name, email, password } = req.query
+  const user = await User.insertMany({ name: name, email: email, password: password })
+
+  res.status(200).json(user)
+})
+app.get('/find', async (req, res) => {
+
+  const user = await User.find({});
+  res.status(200).json(user)
+
+})
+app.get('/update', (req, res) => {
+
+})
+app.get('/delete', (req, res) => {
+
+})
+
+
+
+// async function updateOne() {
+//   await User.updateOne({ _id: '673de0e94014e9bdd3aba46a' }, { $set: { password: '123456' } })
+// }
+
+// updateOne()
+// const res = await
+// const sam = new User({ name: "Sam", email: 'sam@234.com', password: 'pass@123' })
+// await sam.save()
