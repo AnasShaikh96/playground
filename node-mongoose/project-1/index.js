@@ -35,20 +35,23 @@ app.get('/find', async (req, res) => {
   res.status(200).json(user)
 
 })
-app.get('/update', (req, res) => {
+app.get('/update', async (req, res) => {
+
+  const { id, name, email, password } = req.query;
+
+  const user = await User.updateOne({ _id: id }, { name, email, password })
+
+  res.status(200).json({
+    message: 'Successfull',
+    data: user
+  })
 
 })
-app.get('/delete', (req, res) => {
+app.get('/delete', async (req, res) => {
+
+  const { id } = req.query;
+
+  const user = await User.deleteOne({ _id: id })
+  res.status(200).json(user)
 
 })
-
-
-
-// async function updateOne() {
-//   await User.updateOne({ _id: '673de0e94014e9bdd3aba46a' }, { $set: { password: '123456' } })
-// }
-
-// updateOne()
-// const res = await
-// const sam = new User({ name: "Sam", email: 'sam@234.com', password: 'pass@123' })
-// await sam.save()
