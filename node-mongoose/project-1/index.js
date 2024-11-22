@@ -17,14 +17,12 @@ async function main() {
 main().catch((err) => console.log(err));
 
 
-
-
 const UserSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
   courses: [{
-    type: mongoose.Schema.Types.ObjectId, ref: 'courses'
+    type: mongoose.Schema.Types.ObjectId, ref: 'course'
   }]
 });
 
@@ -59,10 +57,12 @@ app.get('/user/delete', async (req, res) => {
 
   const { id } = req.query;
 
-  const user = await User.deleteOne({ _id: id })
+  const user = await User.deleteMany({})
   res.status(200).json(user)
 
 })
+
+
 
 
 
@@ -70,7 +70,7 @@ const CourseSchema = new mongoose.Schema({
   title: String,
   description: String,
   users: [{
-    type: mongoose.Schema.Types.ObjectId, ref: 'users'
+    type: mongoose.Schema.Types.ObjectId, ref: 'user'
   }]
 })
 
@@ -82,12 +82,43 @@ app.get('/course/create', async (req, res) => {
   const { title, description, userId } = req.query
 
   const course = await Course.create({ title: title, description: description, users: [userId] });
-  // const userCourses = await User.findOne({ _id: userId })
 
-  // console.log(userCourses.courses)
+  res.status(200).json(course)
 
-  await User.updateOne({ _id: userId }, { $set: { courses: [userCourses, course._id] } })
+})
 
-  // res.status(200).json(course)
+
+app.get('/course/find', async (req, res) => {
+
+  const course = await Course.find({})
+  res.status(200).json(course)
+
+})
+
+app.get('/course/delete', async (req, res) => {
+
+  const course = await Course.deleteMany({})
+  res.status(200).json(course)
+
+})
+
+app.get('/course/update', async (req, res) => {
+
+  const { courseId, userId } = req.query;
+
+  const user = await User.findOne({ _id: userId })
+  user.courses.push(courseId)
+  await user.save()
+
+
+  const course = await Course.findById(courseId);
+  course.users.push(userId)
+  await course.save()
+
+  res.status(200).json({
+    user: user,
+    course: course
+  })
+
 
 })
