@@ -107,13 +107,16 @@ app.get('/course/update', async (req, res) => {
   const { courseId, userId } = req.query;
 
   const user = await User.findOne({ _id: userId })
-  user.courses.push(courseId)
-  await user.save()
-
+  if (!user.courses.includes(courseId)) {
+    user.courses.push(courseId)
+    await user.save()
+  }
 
   const course = await Course.findById(courseId);
-  course.users.push(userId)
-  await course.save()
+  if (!course.users.includes(userId)) {
+    course.users.push(userId)
+    await course.save()
+  }
 
   res.status(200).json({
     user: user,
