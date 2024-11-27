@@ -5,7 +5,7 @@ const hashtagSchema = new mongoose.Schema({
     type: String
   },
   mentions: [{
-    id: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Blog'
   }]
 }, { timestamps: true });

@@ -12,7 +12,7 @@ const blogSchema = new mongoose.Schema({
   comments: [
     {
       user: {
-        id: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
       },
       comment: {
@@ -21,7 +21,7 @@ const blogSchema = new mongoose.Schema({
       replies: [
         {
           user: {
-            id: mongoose.Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
           },
           comment: {
@@ -32,7 +32,7 @@ const blogSchema = new mongoose.Schema({
     }
   ],
   hashtags: [{
-    id: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Hashtag'
   }]
 

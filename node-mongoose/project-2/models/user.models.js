@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
     min: [6, 'Minimum 6 characters Required']
   },
   blogs: [{
-    id: mongoose.Schema.Types.ObjectId,
-    ref: 'Blog'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Blog"
   }]
 }, { timestamps: true });
 
