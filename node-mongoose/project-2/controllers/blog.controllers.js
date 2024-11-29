@@ -9,9 +9,9 @@ const createBlog = asyncHandler(async (req, res) => {
 
   const { title, content, createdBy } = req.body
 
-  // if ([title, content, createdBy].some(x => x.trim().length === 0)) {
-  //   throw new ApiError(400, 'Title or Content cannot be empty')
-  // }
+  if ([title, content, createdBy].some(x => x.trim().length === 0)) {
+    throw new ApiError(400, 'Title or Content cannot be empty')
+  }
 
   const user = await User.findById({ _id: createdBy });
 
@@ -29,4 +29,15 @@ const createBlog = asyncHandler(async (req, res) => {
 
 })
 
-export { createBlog }
+
+const findBlogs = asyncHandler(async (req, res) => {
+
+  const blog = await Blog.find();
+
+  return res.status(200).json(
+    new ApiResponse(200, blog)
+  )
+
+})
+
+export { createBlog, findBlogs }
