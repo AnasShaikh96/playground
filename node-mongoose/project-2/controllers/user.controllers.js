@@ -92,12 +92,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
 
-  const userCookies = req.cookies.accessToken
-  // const splitCookies = userCookies.split(';')[0]
-  // const accessToken = splitCookies.replace('accessToken=', '')
-  // const verifyToken = jwt.verify(accessToken, 'pass@123')
-
-  console.log(userCookies)
+  console.log('in controller', req.user)
 
 
 })
