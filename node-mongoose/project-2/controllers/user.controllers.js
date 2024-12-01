@@ -2,6 +2,7 @@ import { User } from "../models/user.models.js"
 import { ApiError } from "../utils/ApiError.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
+import jwt from 'jsonwebtoken'
 
 
 const generateAccessAndRefreshToken = async (userId) => {
@@ -56,11 +57,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { email, userName, password } = req.body;
 
-  // if ([email, userName, password].some(field => field.trim() === '')) {
-  //   throw new ApiError(400, 'Email or password cannot be empty')
-  // }
-
-
   const user = await User.findOne({
     $or: [{ email }, { userName }]
   })
@@ -94,6 +90,19 @@ const loginUser = asyncHandler(async (req, res) => {
 })
 
 
+const logoutUser = asyncHandler(async (req, res) => {
+
+  const userCookies = req.cookies.accessToken
+  // const splitCookies = userCookies.split(';')[0]
+  // const accessToken = splitCookies.replace('accessToken=', '')
+  // const verifyToken = jwt.verify(accessToken, 'pass@123')
+
+  console.log(userCookies)
+
+
+})
+
+
 const getUsers = asyncHandler(async (req, res) => {
 
   const users = await User.find();
@@ -102,4 +111,4 @@ const getUsers = asyncHandler(async (req, res) => {
 })
 
 
-export { createUser, getUsers, loginUser }
+export { createUser, getUsers, loginUser, logoutUser }
