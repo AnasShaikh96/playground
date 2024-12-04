@@ -92,10 +92,85 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
 
-  console.log('in controller', req.user)
+  const user = await User.findByIdAndUpdate(req.user._id, { $unset: { refreshToken: 1 } }, { new: true });
+
+
+  const options = {
+    httpOnly: true,
+    secure: true
+  }
+
+
+  return res.status(200)
+    .clearCookie("accessToken", '', options)
+    .clearCookie("refreshToken", '', options)
+    .json(
+      new ApiResponse(200, { user }, 'User logged out succesfully')
+    )
+
+
 
 
 })
+
+
+const refreshAccessToken = asyncHandler(async (req, res) => {
+
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    throw new ApiError(401, 'Invalid Refresh Token')
+  }
+
+  try {
+    const decodedToken = jwt.verify(refreshToken, 'pass@123');
+
+    if (!decodedToken) {
+      throw new ApiError(401, 'Refresh Token expired or Invalid')
+    }
+
+
+    const user = await User.findById(decodedToken?.id);
+
+    if (!user) {
+      throw new ApiError(401, 'Invalid Refresh Token')
+    }
+
+console.log(user)
+
+    if (refreshToken !== user.refreshToken) {
+      throw new ApiError(401, 'Refresh Token is invalid')
+    }
+
+
+    const options = {
+      httpOnly: true,
+      secure: true
+    }
+
+    const { accessToken, newRefreshToken } = await generateAccessAndRefreshToken(user._id)
+
+
+    return res.status(200)
+      .cookies('accessToken', accessToken, options)
+      .cookies('refreshToken', newRefreshToken, options)
+      .json(
+        new ApiResponse(200, { accessToken, refreshToken: newRefreshToken }, 'Token Refreshed')
+      )
+
+
+
+  } catch (error) {
+
+    throw new ApiError(401, error.message || 'Invalid Refresh Token')
+
+  }
+
+
+
+
+})
+
 
 
 const getUsers = asyncHandler(async (req, res) => {
@@ -106,4 +181,4 @@ const getUsers = asyncHandler(async (req, res) => {
 })
 
 
-export { createUser, getUsers, loginUser, logoutUser }
+export { createUser, getUsers, loginUser, logoutUser, refreshAccessToken }

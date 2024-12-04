@@ -26,7 +26,13 @@ const userSchema = new mongoose.Schema({
   blogs: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Blog"
-  }]
+  }],
+  accessToken: {
+    type: String
+  },
+  refreshToken: {
+    type: String
+  },
 }, { timestamps: true });
 
 
@@ -56,8 +62,6 @@ userSchema.methods.generateRefreshToken = function () {
 
   return jwt.sign({
     id: this._id,
-    userName: this.userName,
-    email: this.email
   }, "pass@123", {
     expiresIn: 60 * 60
   })
