@@ -74,6 +74,10 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id)
 
+
+  const updateAccessToken = await User.findByIdAndUpdate(user._id, { $set: { accessToken, refreshToken } });
+  console.log('updateAccessToken', updateAccessToken)
+
   const options = {
     httpOnly: true,
     secure: true
@@ -83,7 +87,7 @@ const loginUser = asyncHandler(async (req, res) => {
     .cookie('accessToken', accessToken, options)
     .cookie('refreshToken', refreshToken, options)
     .json(
-      new ApiResponse(200, user, "User Logged in Successfully!")
+      new ApiResponse(200, updateAccessToken, "User Logged in Successfully!")
     )
 
 
@@ -136,7 +140,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, 'Invalid Refresh Token')
     }
 
-console.log(user)
+    console.log(user)
 
     if (refreshToken !== user.refreshToken) {
       throw new ApiError(401, 'Refresh Token is invalid')
@@ -152,8 +156,8 @@ console.log(user)
 
 
     return res.status(200)
-      .cookies('accessToken', accessToken, options)
-      .cookies('refreshToken', newRefreshToken, options)
+      .cookie('accessToken', accessToken, options)
+      .cookie('refreshToken', newRefreshToken, options)
       .json(
         new ApiResponse(200, { accessToken, refreshToken: newRefreshToken }, 'Token Refreshed')
       )
@@ -161,23 +165,16 @@ console.log(user)
 
 
   } catch (error) {
-
     throw new ApiError(401, error.message || 'Invalid Refresh Token')
-
   }
-
-
-
-
 })
 
 
 
 const getUsers = asyncHandler(async (req, res) => {
-
-  const users = await User.find();
-
-  res.status(200).json(users)
+  res.status(200).json(
+    new ApiResponse(200, req.user, 'User fetched Successfully!')
+  )
 })
 
 
