@@ -76,7 +76,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
 
   const updateAccessToken = await User.findByIdAndUpdate(user._id, { $set: { accessToken, refreshToken } });
-  console.log('updateAccessToken', updateAccessToken)
+  // console.log('updateAccessToken', updateAccessToken)
 
   const options = {
     httpOnly: true,
@@ -111,10 +111,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(200, { user }, 'User logged out succesfully')
     )
-
-
-
-
 })
 
 
@@ -140,8 +136,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
       throw new ApiError(401, 'Invalid Refresh Token')
     }
 
-    console.log(user)
-
+    // console.log(user)
     if (refreshToken !== user.refreshToken) {
       throw new ApiError(401, 'Refresh Token is invalid')
     }
